@@ -103,7 +103,8 @@ function openLink($a) {
         $parentli.addClass('active');
 
         // scroll to active
-        $(window).scrollTop($parentli.offset().top - 47 - 26);
+        // $(window).scrollTop($parentli.offset().top - 47 - 24);
+        $('html, body').animate({scrollTop : ($parentli.offset().top - 47 - 24)}, 'slow')
 
         var $browser = $('#browser');
         var src = $a.attr('href');
