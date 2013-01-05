@@ -113,7 +113,13 @@ function openLink($a) {
         $browser.empty();
 
         // test for an image
-        if (src.substr(-4) == ".jpg") {
+        // TODO: redo extension checking in a clean way
+        var imageExtensions = {
+            ".jpg":1,
+            "jpeg":1,
+            ".png":1
+        }
+        if (src.substr(-4) in imageExtensions) {
             var $image = $('<img />')
             $image.attr('src',src);
             $image.appendTo($browser);
