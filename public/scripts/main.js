@@ -14,9 +14,6 @@ Handlebars.registerHelper("date", function(secondsUTC) {
     var millisecondsUTC = secondsUTC * 1000;
     var millisecondsDiff = now.getTimezoneOffset() * 60 * 1000;
     var milliseconds = millisecondsUTC - millisecondsDiff;
-    console.log(millisecondsUTC);
-    console.log(millisecondsDiff);
-    console.log(milliseconds);
     var difference = (now.getTime() - milliseconds)
 
     var differenceMinutes = difference / (60 * 1000);
@@ -95,7 +92,6 @@ $(function() {
                 break;
             
             default:
-                console.log(e.which);
         }
     });
 });
