@@ -1,8 +1,8 @@
 {% raw %}
 <script id="listing-template" type="text/x-handlebars-template">
-    <ul>
+    <ul class="listing">
     {{#each children}}
-    <li class="media">
+    <li class="listing__item media" data-name="{{this.data.name}}">
     <img class="media__img" src="{{this.data.thumbnail}}" />
     <p class="media__body">
         <a href="{{this.data.url}}" class="internal">

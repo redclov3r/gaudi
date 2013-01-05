@@ -58,21 +58,22 @@ html{
 
 .results {
 	margin-top: 47px;
-	ul {
-		margin: 0;
-		width: 70%;
+}
+
+.listing {
+	margin: 0;
+	width: 70%;
+}
+.listing__item {
+	//margin: 0;
+	padding-left: $base-spacing-unit / 2;
+	padding-left: ($base-spacing-unit / (2 * $base-font-size))*1rem;
+
+	&.active {
+		border-left: solid 4px $strong-red;
 	}
 	a {
 		color: #333;
-	}
-	li {
-		//margin: 0;
-		padding-left: $base-spacing-unit / 2;
-		padding-left: ($base-spacing-unit / (2 * $base-font-size))*1rem;
-
-		&.active {
-			border-left: solid 4px $strong-red;
-		}
 	}
 }
 
