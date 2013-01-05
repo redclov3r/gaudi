@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>{% block title %}redder{% endblock %}</title>
+        {{ "/styles/your-project.css" | asset_url | stylesheet_tag }}
+        <!-- TODO: Complete this project :) -->
+    </head>
+    <body class="wrapper">
+		<header class="mainheader cf">
+			<form class="searchform">
+					<input type="text" id="subreddit" placeholder="pics" />
+					<input type="submit" id="open-btn" value="OPEN" class="btn" />
+			</form>
+			<h1>redder</h1>
+			<h2>a reddit reader</h2>
+		</header>
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+		{% include 'templates' %}
+        {{ "/scripts/libs/jquery-1.8.3.min.js" | asset_url | script_tag }}
+        {{ "/scripts/libs/handlebars-1.0.rc.1.js" | asset_url | script_tag }}
+        {{ "/scripts/main.js" | asset_url | script_tag }}
+    </body>
+</html>

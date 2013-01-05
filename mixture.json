@@ -1,0 +1,22 @@
+{
+  "debug": false,
+  "defaultLayout": "layout",
+  "defaultPort": null,
+  "defaultTemplate": "index",
+  "description": "A powerful, scalable, Sass-based, BEM, OOCSS framework.",
+  "hostName": null,
+  "lintScripts": false,
+  "optimiseImages": true,
+  "project": "redder",
+  "rootAssets": "public",
+  "rootIncludes": "views/includes",
+  "rootLayouts": "views/layouts",
+  "rootViews": "views",
+  "scriptOutput": "public/scripts",
+  "styleOutput": "public/styles",
+  "type": "mixture",
+  "urlid": null,
+  "useCompass": false,
+  "username": null,
+  "version": "1.0.0.0"
+}

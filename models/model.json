@@ -1,0 +1,22 @@
+{
+	"title": "Model",
+	"modelDate": "14.11.2012",
+	"people": [
+		{
+			"name": "Harry Roberts",
+			"twitter": "@csswizardry"
+		},
+		{
+			"name": "Neil Kinnish",
+			"twitter": "@neiltak"
+		},
+		{
+			"name": "Mike Kus",
+			"twitter": "@mikekus"
+		},
+		{
+			"name": "Pete Nelson",
+			"twitter": "@petetak"
+		}
+	]
+}

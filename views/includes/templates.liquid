@@ -1,0 +1,21 @@
+{% raw %}
+<script id="listing-template" type="text/x-handlebars-template">
+    <ul>
+    {{#each children}}
+    <li class="media">
+    <img class="media__img" src="{{this.data.thumbnail}}" />
+    <p class="media__body">
+        <a href="{{this.data.url}}" class="internal">
+            {{this.data.title}}
+        </a>
+        <br />
+        <small>
+            <b>{{this.data.score}}</b> Points, 
+            {{date this.data.created_utc}}
+        </small>
+    </p>
+    </li>
+    {{/each}}
+    </ul>
+</script>
+{% endraw %}
