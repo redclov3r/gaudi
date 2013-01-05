@@ -46,56 +46,6 @@ function openSubreddit(subreddit) {
     });
 }
 
-$(function() {
-    $('#open-btn').on('click', function(e) {
-        var sr = $('#subreddit').val();
-        if (sr == "") {sr = "pics"};
-        openSubreddit(sr);
-        $('#browser').removeClass('active');
-        e.preventDefault();
-    })
-
-    $(document).on('mouseenter', '#browser', function(e){
-        if ($('#browser').children().length > 0)
-            $('#browser').addClass('active');
-    });
-
-    $(document).on('mouseleave', '#browser', function(e){
-        $('#browser').removeClass('active');
-    });
-
-    $(document).on('click', 'a.internal', function(e){
-        openLink($(this));
-        e.preventDefault();
-    });
-
-    $(document).on('keydown', function(e){
-        switch(e.which) {
-            case 40:
-                next();
-                e.preventDefault();
-                break;
-            
-            case 38:
-                prev();
-                e.preventDefault();
-                break;
-
-            case 39:
-                $('#browser').removeClass('active');
-                e.preventDefault();
-                break;
-            
-            case 37:
-                $('#browser').addClass('active');
-                e.preventDefault();
-                break;
-            
-            default:
-        }
-    });
-});
-
 function openLink($a) {
         // set active class
         $parentli = $a.closest('li');
@@ -152,4 +102,54 @@ function next() {
     if ($nextli.length > 0)
         openLink($nextli.find('a.internal'));
 }
+
+$(function() {
+    $('#open-btn').on('click', function(e) {
+        var sr = $('#subreddit').val();
+        if (sr == "") {sr = "pics"};
+        openSubreddit(sr);
+        $('#browser').removeClass('active');
+        e.preventDefault();
+    })
+
+    $(document).on('mouseenter', '#browser', function(e){
+        if ($('#browser').children().length > 0)
+            $('#browser').addClass('active');
+    });
+
+    $(document).on('mouseleave', '#browser', function(e){
+        $('#browser').removeClass('active');
+    });
+
+    $(document).on('click', 'a.internal', function(e){
+        openLink($(this));
+        e.preventDefault();
+    });
+
+    $(document).on('keydown', function(e){
+        switch(e.which) {
+            case 40:
+                next();
+                e.preventDefault();
+                break;
+            
+            case 38:
+                prev();
+                e.preventDefault();
+                break;
+
+            case 39:
+                $('#browser').removeClass('active');
+                e.preventDefault();
+                break;
+            
+            case 37:
+                $('#browser').addClass('active');
+                e.preventDefault();
+                break;
+            
+            default:
+        }
+    });
+});
 
