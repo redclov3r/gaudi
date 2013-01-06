@@ -31,14 +31,36 @@ Handlebars.registerHelper("date", function(secondsUTC) {
 
 var listingTemplate = Handlebars.compile($('#listing-template').html());
 
-function openSubreddit(subreddit) {
-    var url = "http://www.reddit.com/r/" + subreddit + "/hot.json?jsonp=?";
+function openSubreddit(subreddit, after, append, callback) {
+    var url = "http://www.reddit.com/r/" + subreddit + "/hot.json";
+    var data = {};
+
+    if (after != undefined) {
+        data.after = after;
+    };
+
+    if (append == undefined) {
+        append = false;
+    };
+
     $.ajax(url, {
         dataType: 'jsonp',
+        jsonp: 'jsonp',
+        data: data,
         success: function(data, textStatus, jqXHR){
             if(data.kind == "Listing") {
                 var listingHTML = listingTemplate(data.data);
-                $('#results').html(listingHTML);
+                var $ul = $('#results').find('ul');
+
+                if ($ul.length == 0 || $ul.data("subreddit") != subreddit || !append) {
+                    $ul = $('<ul class="listing">');
+                }
+
+                $ul.append(listingHTML).appendTo($('#results').empty());
+                $ul.data("subreddit", subreddit);
+                if (callback != undefined) {
+                    callback();
+                };
             } else {
                 console.log("API didn't return listing")
             }
@@ -81,6 +103,12 @@ function openLink($a) {
         }
 }
 
+function loadMore($ul, callback) {
+    var subreddit = $ul.data("subreddit");
+    var lastItem = $ul.children('li').last().data("name");
+    openSubreddit(subreddit, lastItem, true, callback);
+}
+
 function prev() {
     var $activeli = $('#results li.active');
     if($activeli.length == 0) {
@@ -99,8 +127,11 @@ function next() {
     } else {
         var $nextli = $activeli.next();
     }
-    if ($nextli.length > 0)
+    if ($nextli.length > 0) {
         openLink($nextli.find('a.internal'));
+    } else {
+        loadMore($activeli.parent(), next);
+    }
 }
 
 $(function() {

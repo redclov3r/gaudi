@@ -1,6 +1,5 @@
 {% raw %}
 <script id="listing-template" type="text/x-handlebars-template">
-    <ul class="listing">
     {{#each children}}
     <li class="listing__item media" data-name="{{this.data.name}}">
     <img class="media__img" src="{{this.data.thumbnail}}" />
@@ -16,6 +15,5 @@
     </p>
     </li>
     {{/each}}
-    </ul>
 </script>
 {% endraw %}
