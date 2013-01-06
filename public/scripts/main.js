@@ -31,7 +31,20 @@ Handlebars.registerHelper("date", function(secondsUTC) {
 
 var listingTemplate = Handlebars.compile($('#listing-template').html());
 
+var spinnerOpts = {
+    lines: 17,
+    length: 4,
+    radius: 17,
+    corners: 1,
+    trail: 100,
+    color: "#8D8674"
+};
+var spinner;
+
 function openSubreddit(subreddit, after, append, callback) {
+    if(spinner != undefined)
+        spinner.stop();
+
     var url = "http://www.reddit.com/r/" + subreddit + "/hot.json";
     var data = {};
 
@@ -42,13 +55,17 @@ function openSubreddit(subreddit, after, append, callback) {
     if (append == undefined) {
         append = false;
     };
+    
+    spinner = new Spinner(spinnerOpts).spin(document.getElementById('results'));
 
     $.ajax(url, {
         dataType: 'jsonp',
         jsonp: 'jsonp',
         data: data,
         success: function(data, textStatus, jqXHR){
+            spinner.stop();
             if(data.kind == "Listing") {
+
                 var listingHTML = listingTemplate(data.data);
                 var $ul = $('#results').find('ul');
 
@@ -58,6 +75,7 @@ function openSubreddit(subreddit, after, append, callback) {
 
                 $ul.append(listingHTML).appendTo($('#results').empty());
                 $ul.data("subreddit", subreddit);
+
                 if (callback != undefined) {
                     callback();
                 };
