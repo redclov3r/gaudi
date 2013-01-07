@@ -130,10 +130,12 @@ var spinner;
 
 function setLoading(isLoading) {
     if(isLoading) {
+        $('#spinner').show().addClass('active');
         spinner = new Spinner(spinnerOpts).spin(document.getElementById('spinner'));
     } else {
         if(spinner != undefined)
             spinner.stop();
+        $('#spinner').hide().removeClass('active');
     }
 }
 

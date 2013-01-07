@@ -114,8 +114,12 @@ html{
 	position: fixed;
 	left: 0;
 	top: 47px;
-	height: 200px;
+	height: 100%;
 	width: 70%;
+
+	&.active {
+		background: rgba($light-brown, 0.6);
+	}
 
 	.browser.active ~ & {
 		width: 20%;
