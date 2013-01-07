@@ -109,3 +109,15 @@ html{
 		height: 100%;
 	}
 }
+
+.spinner {
+	position: fixed;
+	left: 0;
+	top: 47px;
+	height: 200px;
+	width: 70%;
+
+	.browser.active ~ & {
+		width: 20%;
+	}
+}

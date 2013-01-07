@@ -39,11 +39,9 @@ var spinnerOpts = {
     trail: 100,
     color: "#8D8674"
 };
-var spinner;
 
 function openSubreddit(subreddit, after, append, callback) {
-    if(spinner != undefined)
-        spinner.stop();
+    setLoading(false);
 
     var url = "http://www.reddit.com/r/" + subreddit + "/hot.json";
     var data = {};
@@ -56,14 +54,14 @@ function openSubreddit(subreddit, after, append, callback) {
         append = false;
     };
     
-    spinner = new Spinner(spinnerOpts).spin(document.getElementById('results'));
+    setLoading(true);
 
     $.ajax(url, {
         dataType: 'jsonp',
         jsonp: 'jsonp',
         data: data,
         success: function(data, textStatus, jqXHR){
-            spinner.stop();
+            setLoading(false)
             if(data.kind == "Listing") {
 
                 var listingHTML = listingTemplate(data.data);
@@ -94,7 +92,7 @@ function openLink($a) {
 
         // scroll to active
         // $(window).scrollTop($parentli.offset().top - 47 - 24);
-        $('html, body').animate({scrollTop : ($parentli.offset().top - 47 - 24)}, 'slow')
+        $('html, body').animate({scrollTop : ($parentli.offset().top - 47 - 36)}, 'slow')
 
         var $browser = $('#browser');
         var src = $a.attr('href');
@@ -125,6 +123,18 @@ function loadMore($ul, callback) {
     var subreddit = $ul.data("subreddit");
     var lastItem = $ul.children('li').last().data("name");
     openSubreddit(subreddit, lastItem, true, callback);
+}
+
+// TODO: remove global var!
+var spinner;
+
+function setLoading(isLoading) {
+    if(isLoading) {
+        spinner = new Spinner(spinnerOpts).spin(document.getElementById('spinner'));
+    } else {
+        if(spinner != undefined)
+            spinner.stop();
+    }
 }
 
 function prev() {
