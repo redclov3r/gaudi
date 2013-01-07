@@ -16,6 +16,12 @@ $light-brown: lighten(#D4C5A8, 10);
 	border-radius: 2px;
 }
 
+.brand {
+	font-family:'SourceSansPro', sans-serif;
+	font-weight: 300;
+	color: $strong-red;
+}
+
 html{
 	font-family:'SourceSansPro', sans-serif;
 	background-color: $light-brown;
