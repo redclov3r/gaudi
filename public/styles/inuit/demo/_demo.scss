@@ -48,6 +48,10 @@ html{
 	.searchform {
 		float: right;
 		margin-top: $base-spacing-unit/4 +px;
+
+		label {
+			display: inline;
+		}
 	}
 }
 
