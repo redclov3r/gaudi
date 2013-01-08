@@ -133,7 +133,7 @@ function setLoading(isLoading) {
         $('#spinner').show().addClass('active');
         spinner = new Spinner(spinnerOpts).spin(document.getElementById('spinner'));
     } else {
-        if(spinner != undefined)
+        if(spinner != undefined && spinner.stop != undefined)
             spinner.stop();
         $('#spinner').hide().removeClass('active');
     }
