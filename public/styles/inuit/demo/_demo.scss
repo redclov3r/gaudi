@@ -29,6 +29,15 @@ html{
 	color:#222;
 }
 
+a{
+    &:hover,
+    &:active,
+    &:visited,
+    &:focus {
+		color: $strong-red;
+    }
+}
+
 .mainheader {
 	position: fixed;
 	left: 0;
