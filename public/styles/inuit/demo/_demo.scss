@@ -80,6 +80,14 @@ a{
 	min-height: 300px;
 }
 
+.index-footer {
+	@include font-size(14);
+	font-style: italic;
+	position: absolute;
+	bottom: 0;
+	margin-bottom: $base-spacing-unit +px;
+}
+
 .listing {
 	margin: 0;
 	width: 70%;
