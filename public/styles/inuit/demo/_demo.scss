@@ -63,6 +63,7 @@ a{
 	.searchform {
 		float: right;
 		margin-top: $base-spacing-unit/4 +px;
+		margin-right: 30%;
 
 		label {
 			display: inline;
@@ -108,11 +109,11 @@ a{
 .browser {
 	position: fixed;
 	right: -50%;
-	top: 47px;
+	top: 0px;
 	height: 100%;
 	width: 80%;
 
-	box-shadow: 0px 0px 5px $grey-brown, inset 0px 0px 8px black;
+	box-shadow: 0px 0px 12px darken($grey-brown, 40);
 	background: url('../images/wild_oliva.png');
 
 	-webkit-transition: right 0.8s ease, top 0.4s ease, box-shadow 0.8s ease;
@@ -120,7 +121,7 @@ a{
 	&.active {
 		right: 0;
 		top: 0;
-		box-shadow: 0px 0px 12px darken($grey-brown, 40);
+		box-shadow: 0px 0px 6px darken($grey-brown, 40);
 		-webkit-transition: right 0.4s ease, top 0.2s 0.2s ease, box-shadow 0.4s ease;
 	}
 
