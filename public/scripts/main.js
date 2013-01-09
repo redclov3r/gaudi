@@ -92,7 +92,7 @@ function openLink($a) {
 
         // scroll to active
         // $(window).scrollTop($parentli.offset().top - 47 - 24);
-        $('html, body').animate({scrollTop : ($parentli.offset().top - 47 - 36)}, 'slow')
+        $('html, body').stop(true).animate({scrollTop : ($parentli.offset().top - 47 - 36)}, 'slow')
 
         browser.load($a.attr('href'));
 }
