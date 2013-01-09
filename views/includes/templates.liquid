@@ -4,13 +4,15 @@
     <li class="listing__item media" data-name="{{this.data.name}}">
     <img class="media__img" src="{{this.data.thumbnail}}" />
     <p class="media__body">
-        <a href="{{this.data.url}}" class="internal">
+        <a href="{{this.data.url}}" class="internal listing__item__link">
             {{this.data.title}}
         </a>
         <br />
         <small>
+            <b>{{this.data.author}}</b> posted this
             {{date this.data.created_utc}},
-            <b>{{this.data.score}}</b> Points
+            <b>{{this.data.score}}</b> Points,
+            <a href="http://reddit.com{{this.data.permalink}}" class="internal">{{this.data.num_comments}}</a> Comments
         </small>
     </p>
     </li>

@@ -105,9 +105,17 @@ a{
 		border-left: solid 4px $strong-red;
 	}
 	a {
-		color: #333;
-	}
+	    color: $strong-red;
+    }
+    .listing__item__link {
+        color: #222;
+
+        &:visited {
+            color: $grey-brown;
+        }
+    }
 }
+
 
 .browser {
 	position: fixed;
