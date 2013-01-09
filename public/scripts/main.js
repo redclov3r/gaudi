@@ -144,7 +144,7 @@ function next() {
 
 var Browser = function(elementSelector) {
     this.$el = $(elementSelector);
-    this.timeout = 3000;
+    this.timeout = 7000;
     this.timeoutId = null;
 }
 
