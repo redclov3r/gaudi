@@ -94,29 +94,7 @@ function openLink($a) {
         // $(window).scrollTop($parentli.offset().top - 47 - 24);
         $('html, body').animate({scrollTop : ($parentli.offset().top - 47 - 36)}, 'slow')
 
-        var $browser = $('#browser');
-        var src = $a.attr('href');
-
-        $browser.addClass('active');
-        $browser.empty();
-
-        // test for an image
-        // TODO: redo extension checking in a clean way
-        var imageExtensions = {
-            ".jpg":1,
-            "jpeg":1,
-            ".png":1
-        }
-        if (src.substr(-4) in imageExtensions) {
-            var $image = $('<img />')
-            $image.attr('src',src);
-            $image.appendTo($browser);
-
-        } else {
-            var $iframe = $('<iframe></iframe>')
-            $iframe.attr('src',src);
-            $iframe.appendTo($browser);
-        }
+        browser.load($a.attr('href'));
 }
 
 function loadMore($ul, callback) {
@@ -163,6 +141,54 @@ function next() {
         loadMore($activeli.parent(), next);
     }
 }
+
+var Browser = function(elementSelector) {
+    this.$el = $(elementSelector);
+    this.timeout = 3000;
+    this.timeoutId = null;
+}
+
+Browser.prototype.load = function(url) {
+    var me = this;
+
+    clearTimeout(me.timeoutId);
+    me.$el.empty().addClass('active');
+
+    // test for an image
+    // TODO: redo extension checking in a clean way
+    var imageExtensions = {
+        ".jpg":1,
+        "jpeg":1,
+        ".png":1
+    }
+
+    if (url.substr(-4) in imageExtensions) {
+        var $image = $('<img />');
+        $image.attr('src',url);
+        $image.appendTo(me.$el);
+    } else {
+        var $iframe = $('<iframe></iframe>');
+
+        // Error handling
+        $iframe.data('loaded', false);
+        $iframe.on('load', function() {
+            $iframe.data('loaded', true);
+        });
+        me.timeoutId = setTimeout(function() {
+            if(!$iframe.data('loaded')) {
+                $iframe.remove();
+                var errorTemplate = Handlebars.compile($('#error-template').html());
+
+                me.$el.append(errorTemplate({"url": url}));
+            }
+        }, me.timeout);
+        
+        $iframe.attr('src',url);
+        $iframe.appendTo(me.$el);
+    }
+}
+
+var browser = new Browser('#browser');
 
 $(function() {
     $('#open-btn').on('click', function(e) {
