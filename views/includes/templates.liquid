@@ -16,4 +16,11 @@
     </li>
     {{/each}}
 </script>
+<script id="error-template" type="text/x-handlebars-template">
+    <div class="error">
+        <h3>There was an error loading <code>{{url}}</code>.</h3>
+        <p>This may have several reasons but most probably <code>{{url}}</code> does not allow to be rendered in an <code>&lt;iframe&gt;</code>.</p>
+        <p><a href="{{url}}" class="btn" target="_blank">Open <em>{{url}}</em> in new tab instead</a></p>
+    </div>
+</script>
 {% endraw %}
