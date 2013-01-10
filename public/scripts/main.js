@@ -43,44 +43,28 @@ var spinnerOpts = {
 function openSubreddit(subreddit, after, append, callback) {
     setLoading(false);
 
-    var url = "http://www.reddit.com/r/" + subreddit + "/hot.json";
-    var data = {};
-
-    if (after != undefined) {
-        data.after = after;
-    };
-
     if (append == undefined) {
         append = false;
     };
     
     setLoading(true);
 
-    $.ajax(url, {
-        dataType: 'jsonp',
-        jsonp: 'jsonp',
-        data: data,
-        success: function(data, textStatus, jqXHR){
-            setLoading(false)
-            if(data.kind == "Listing") {
+    Reddit.open(subreddit, after, function(listingJSON){
+        setLoading(false);
 
-                var listingHTML = listingTemplate(data.data);
-                var $ul = $('#results').find('ul');
+        var listingHTML = listingTemplate(listingJSON.data);
+        var $ul = $('#results').find('ul');
 
-                if ($ul.length == 0 || $ul.data("subreddit") != subreddit || !append) {
-                    $ul = $('<ul class="listing">');
-                }
+        if ($ul.length == 0 || $ul.data("subreddit") != subreddit || !append) {
+            $ul = $('<ul class="listing">');
+        }
 
-                $ul.append(listingHTML).appendTo($('#results').empty());
-                $ul.data("subreddit", subreddit);
+        $ul.append(listingHTML).appendTo($('#results').empty());
+        $ul.data("subreddit", subreddit);
 
-                if (callback != undefined) {
-                    callback();
-                };
-            } else {
-                console.log("API didn't return listing")
-            }
-        },
+        if (callback != undefined) {
+            callback();
+        };
     });
 }
 
@@ -189,6 +173,45 @@ Browser.prototype.load = function(url) {
 }
 
 var browser = new Browser('#browser');
+
+var Reddit = {}
+Reddit.load = function(endpoint, data, callback) {
+    $.ajax(endpoint, {
+        dataType: 'jsonp',
+        jsonp: 'jsonp',
+        data: data,
+        success: function(data, textStatus, jqXHR){
+            if(data.kind == "Listing") {
+                if (callback != null) {
+                    callback(data);
+                };
+            } else {
+                console.log("API didn't return listing")
+            }
+        },
+    });
+}
+Reddit.open = function(subreddit, after, callback) {
+    var endpoint = "http://www.reddit.com/r/" + subreddit + "/hot.json";
+    var data = {};
+
+    if (after != null) {
+        data.after = after;
+    };
+
+    this.load(endpoint, data, callback);
+}
+Reddit.search = function(query, after, callback) {
+    var endpoint = "http://www.reddit.com/search.json";
+    var data = {
+        q: query
+    };
+
+    if (after != null) {
+        data.after = after;
+    };
+    this.load(endpoint, data, callback);
+}
 
 $(function() {
     $('#open-btn').on('click', function(e) {
