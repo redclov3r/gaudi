@@ -29,6 +29,9 @@ Handlebars.registerHelper("date", function(secondsUTC) {
     return Math.round(differenceMinutes)  + " minutes ago";
 });
 
+var history_enabled = true;
+history_enabled = !!(window.history && history.pushState) && history_enabled;
+
 var listingTemplate = Handlebars.compile($('#listing-template').html());
 
 var spinnerOpts = {
@@ -40,7 +43,7 @@ var spinnerOpts = {
     color: "#8D8674"
 };
 
-function openSubreddit(subreddit, after, append, callback) {
+function openSubreddit(subreddit, after, append, callback, add_history) {
     setLoading(false);
 
     if (append == undefined) {
@@ -66,6 +69,10 @@ function openSubreddit(subreddit, after, append, callback) {
             callback();
         };
     });
+
+    if(add_history == null) add_history = true;
+    if(history_enabled && add_history) 
+        window.history.pushState({type: "subreddit", sr: subreddit}, "/r/" + subreddit, "#/r/" + subreddit);
 }
 
 function openLink($a) {
@@ -261,5 +268,20 @@ $(function() {
             default:
         }
     });
+    
+    if(history_enabled) {
+        window.onpopstate = function(e){
+            if(e.state && e.state.type == "subreddit") {
+                openSubreddit(e.state.sr, null, null, null, false);
+            }
+        }
+
+        if (document.location.hash != "") {
+            if (document.location.hash.substr(1,3) == "/r/") {
+                var subreddit = document.location.hash.substr(4);
+                openSubreddit(subreddit);
+            };
+        };
+    }
 });
 
