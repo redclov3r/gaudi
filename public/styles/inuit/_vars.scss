@@ -57,10 +57,10 @@ $micro-size:        10!default;
 /**
  * Brand stuff
  */
-$strong-red: #ED3F40;
-$damp-red: #AF6353;
-$grey-brown: #8D8674;
-$light-brown: lighten(#D4C5A8, 10);
+$brand-color: #00A8C6;
+$accent-color: #8FBE00;
+$background-color: #F9F2E7;
+$darker-background-color: $background-color - #333;
 
 $brand-color:       $strong-red!default;
 $brand-face:        'SourceSansPro', sans-serif!default;
