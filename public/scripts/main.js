@@ -273,7 +273,11 @@ $(function() {
         window.onpopstate = function(e){
             if(e.state && e.state.type == "subreddit") {
                 openSubreddit(e.state.sr, null, null, null, false);
-            }
+            } 
+            if (e.state == null && document.location.hash.substr(1,3) == "/r/") {
+                var subreddit = document.location.hash.substr(4);
+                openSubreddit(subreddit, null, null, null, false);
+            };
         }
 
         if (document.location.hash != "") {
