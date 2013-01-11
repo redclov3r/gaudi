@@ -28,11 +28,38 @@ html{
 }
 
 a{
+    &,
     &:hover,
     &:active,
     &:visited,
     &:focus {
 		color: $brand-color;
+    }
+}
+
+.tag {
+    @include font-size(16);
+    background: $brand-color;
+    &,
+    &:hover,
+    &:active,
+    &:visited,
+    &:focus {
+		color: white;
+    }
+    padding: 0.2em 0.4em;
+    margin: 0.2em;
+    //line-height: 3;
+    display: inline-block;
+    border-radius: 2px;
+}
+
+.tag-list {
+    list-style: none;
+    margin-left: 0;
+
+    li {
+        display: inline;
     }
 }
 
