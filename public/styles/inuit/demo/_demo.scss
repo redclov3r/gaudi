@@ -69,6 +69,26 @@ a{
 	}
 }
 
+.mainheader__link {
+    position: relative;
+    -webkit-transition: left 0.3s ease;
+    display: block;
+    width: 30%;
+
+    &:hover,
+    &:active,
+    &:visited,
+    &:focus {
+		color: white;
+		text-decoration: none;
+
+    }
+
+    &:hover {
+        left: 0.5em;
+    }
+}
+
 .container {
 	padding: $base-spacing-unit +px;
 	height: 100%;
