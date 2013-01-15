@@ -2,6 +2,7 @@ gaudi
 =====
 
 gaudi is a simple reddit reader based on HTML5, CSS 3 and Javascript.
+There is a [demo](http://redclov3r.mixture.io/ban) if you want to see it in action.
 
 Credits
 -------
