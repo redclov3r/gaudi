@@ -14,7 +14,7 @@ Handlebars.registerHelper("date", function(secondsUTC) {
     var millisecondsUTC = secondsUTC * 1000;
     var millisecondsDiff = now.getTimezoneOffset() * 60 * 1000;
     var milliseconds = millisecondsUTC - millisecondsDiff;
-    var difference = (now.getTime() - milliseconds)
+    var difference = (now.getTime() - milliseconds);
 
     var differenceMinutes = difference / (60 * 1000);
 
@@ -46,7 +46,7 @@ var spinnerOpts = {
 function openSubreddit(subreddit, after, append, callback, add_history) {
     setLoading(false);
 
-    if (append == undefined) {
+    if (append === undefined) {
         append = false;
     };
     
@@ -58,16 +58,16 @@ function openSubreddit(subreddit, after, append, callback, add_history) {
         var listingHTML = listingTemplate(listingJSON.data);
         var $ul = $('#results').find('ul');
 
-        if ($ul.length == 0 || $ul.data("subreddit") != subreddit || !append) {
+        if ($ul.length === 0 || $ul.data("subreddit") != subreddit || !append) {
             $ul = $('<ul class="listing">');
         }
 
         $ul.append(listingHTML).appendTo($('#results').empty());
         $ul.data("subreddit", subreddit);
 
-        if (callback != undefined) {
+        if (callback !== undefined && callback !== null) {
             callback();
-        };
+        }
     });
 
     if(add_history == null) add_history = true;
@@ -83,7 +83,7 @@ function openLink($a) {
 
         // scroll to active
         // $(window).scrollTop($parentli.offset().top - 47 - 24);
-        $('html, body').stop(true).animate({scrollTop : ($parentli.offset().top - 47 - 36)}, 'slow')
+        $('html, body').stop(true).animate({scrollTop : ($parentli.offset().top - 47 - 36)}, 'slow');
 
         browser.load($a.attr('href'));
 }
@@ -102,7 +102,7 @@ function setLoading(isLoading) {
         $('#spinner').show().addClass('active');
         spinner = new Spinner(spinnerOpts).spin(document.getElementById('spinner'));
     } else {
-        if(spinner != undefined && spinner.stop != undefined)
+        if(spinner !== undefined && spinner.stop !== undefined)
             spinner.stop();
         $('#spinner').hide().removeClass('active');
     }
@@ -110,10 +110,11 @@ function setLoading(isLoading) {
 
 function prev() {
     var $activeli = $('#results li.active');
-    if($activeli.length == 0) {
-        var $nextli = $('#results li').last();
+    var $nextli;
+    if($activeli.length === 0) {
+        $nextli = $('#results li').last();
     } else {
-        var $nextli = $activeli.prev();
+        $nextli = $activeli.prev();
     }
     if ($nextli.length > 0)
         openLink($nextli.find('a.internal'));
@@ -121,10 +122,11 @@ function prev() {
 
 function next() {
     var $activeli = $('#results li.active');
-    if($activeli.length == 0) {
-        var $nextli = $('#results li').first();
+    var $nextli;
+    if($activeli.length === 0) {
+        $nextli = $('#results li').first();
     } else {
-        var $nextli = $activeli.next();
+        $nextli = $activeli.next();
     }
     if ($nextli.length > 0) {
         openLink($nextli.find('a.internal'));
@@ -181,7 +183,7 @@ Browser.prototype.load = function(url) {
 
 var browser = new Browser('#browser');
 
-var Reddit = {}
+var Reddit = {};
 Reddit.load = function(endpoint, data, callback) {
     $.ajax(endpoint, {
         dataType: 'jsonp',
@@ -189,11 +191,11 @@ Reddit.load = function(endpoint, data, callback) {
         data: data,
         success: function(data, textStatus, jqXHR){
             if(data.kind == "Listing") {
-                if (callback != null) {
+                if (callback !== null) {
                     callback(data);
                 };
             } else {
-                console.log("API didn't return listing")
+                console.log("API didn't return listing");
             }
         },
     });
@@ -202,7 +204,7 @@ Reddit.open = function(subreddit, after, callback) {
     var endpoint = "http://www.reddit.com/r/" + subreddit + "/hot.json";
     var data = {};
 
-    if (after != null) {
+    if (after !== null) {
         data.after = after;
     };
 
@@ -214,7 +216,7 @@ Reddit.search = function(query, after, callback) {
         q: query
     };
 
-    if (after != null) {
+    if (after !== null) {
         data.after = after;
     };
     this.load(endpoint, data, callback);
@@ -223,7 +225,9 @@ Reddit.search = function(query, after, callback) {
 $(function() {
     $('#open-btn').on('click', function(e) {
         var sr = $('#subreddit').val();
-        if (sr == "") {sr = "pics"};
+        if (sr === "") {
+            sr = "pics";
+        }
         openSubreddit(sr);
         $('#browser').removeClass('active');
         e.preventDefault();
@@ -280,7 +284,7 @@ $(function() {
             };
         }
 
-        if (document.location.hash != "") {
+        if (document.location.hash !== "") {
             if (document.location.hash.substr(1,3) == "/r/") {
                 var subreddit = document.location.hash.substr(4);
                 openSubreddit(subreddit);
