@@ -91,7 +91,7 @@ function openLink($a) {
 function loadMore($ul, callback) {
     var subreddit = $ul.data("subreddit");
     var lastItem = $ul.children('li').last().data("name");
-    openSubreddit(subreddit, lastItem, true, callback);
+    openSubreddit(subreddit, lastItem, true, callback, false);
 }
 
 // TODO: remove global var!
