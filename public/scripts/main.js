@@ -188,6 +188,7 @@ Browser.prototype.load = function(url) {
         var $iframe = $('<iframe></iframe>');
 
         // Error handling
+        /*
         $iframe.data('loaded', false);
         $iframe.on('load', function() {
             $iframe.data('loaded', true);
@@ -200,6 +201,7 @@ Browser.prototype.load = function(url) {
                 me.$el.append(errorTemplate({"url": url}));
             }
         }, me.timeout);
+        */
         $iframe.on('load', function() {
             me.setLoading(false);
         });
