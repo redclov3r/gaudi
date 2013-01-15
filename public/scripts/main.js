@@ -136,13 +136,26 @@ function next() {
 }
 
 var Browser = function(elementSelector) {
+    this.elementSelector = elementSelector;
     this.$el = $(elementSelector);
     this.timeout = 7000;
     this.timeoutId = null;
-}
+    this.spinner = null;
+};
+
+Browser.prototype.setLoading = function(isLoading) {
+    if(isLoading) {
+        this.spinner = new Spinner(spinnerOpts).spin(this.$el.get(0));
+    } else {
+        if(this.spinner !== undefined && this.spinner.stop !== undefined)
+            this.spinner.stop();
+    }
+};
 
 Browser.prototype.load = function(url) {
     var me = this;
+
+    me.setLoading(true);
 
     clearTimeout(me.timeoutId);
     me.$el.empty().addClass('active');
@@ -159,6 +172,10 @@ Browser.prototype.load = function(url) {
         var $image = $('<img />');
         $image.attr('src',url);
         $image.appendTo(me.$el);
+
+        $image.on('load', function() {
+            me.setLoading(false);
+        });
     } else {
         var $iframe = $('<iframe></iframe>');
 
@@ -175,6 +192,9 @@ Browser.prototype.load = function(url) {
                 me.$el.append(errorTemplate({"url": url}));
             }
         }, me.timeout);
+        $iframe.on('load', function() {
+            me.setLoading(false);
+        });
         
         $iframe.attr('src',url);
         $iframe.appendTo(me.$el);
