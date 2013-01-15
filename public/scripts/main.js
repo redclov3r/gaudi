@@ -70,9 +70,17 @@ function openSubreddit(subreddit, after, append, callback, add_history) {
         }
     });
 
-    if(add_history == null) add_history = true;
-    if(history_enabled && add_history) 
+    if (_gaq !== null) {
+        //console.log("gaq");
+        _gaq.push(['_trackPageview', location.pathname  + "/r/" + subreddit]);
+    } else {
+        console.log("no gaq found");
+    }
+
+    if(add_history === undefined) add_history = true;
+    if(history_enabled && add_history) {
         window.history.pushState({type: "subreddit", sr: subreddit}, "/r/" + subreddit, "#/r/" + subreddit);
+    } 
 }
 
 function openLink($a) {
