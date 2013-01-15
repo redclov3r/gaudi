@@ -206,8 +206,8 @@ Browser.prototype.load = function(url) {
             me.setLoading(false);
         });
         
-        $iframe.attr('src',url);
         $iframe.appendTo(me.$el);
+        $iframe.get(0).src = url;
     }
 }
 
