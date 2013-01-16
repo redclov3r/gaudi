@@ -2,7 +2,7 @@
 <script id="listing-template" type="text/x-handlebars-template">
     {{#each children}}
     <li class="listing__item media" data-name="{{this.data.name}}">
-    <img class="media__img" src="{{this.data.thumbnail}}" />
+    <img class="media__img listing__item__thumbnail" src="{{this.data.thumbnail}}" />
     <p class="media__body">
         <a href="{{this.data.url}}" class="internal listing__item__link">
             {{this.data.title}}
