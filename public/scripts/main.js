@@ -257,6 +257,11 @@ $(function() {
     });
 
     $(document).on('click', 'a.internal', function(e){
+        openLink($(this));
+        e.preventDefault();
+    });
+
+    $(document).on('click', '.listing__item__link', function(e){
         $listing.redditListing('activateItem', $(this).closest('li'));
         e.preventDefault();
     });
