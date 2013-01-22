@@ -61,9 +61,12 @@
 
                 $this.redditListing('setLoading', true);
 
+                var lastItem = $this.children().last().data('name');
+
                 data.redditQuery.load(function(listingJSON) {
                     $this.redditListing('renderJSON', listingJSON.data);
-                });
+                    $this.redditListing('next');
+                }, lastItem);
 
                 if (data.settings.afterLoad) {
                     data.settings.afterLoad(data.settings.type, data.settings.value);
@@ -137,6 +140,7 @@
                     $this.redditListing('activateItem', $nextli);
                 } else {
                     //loadMore($activeli.parent(), next);
+                    $this.redditListing('loadMore', $nextli);
                 }
             });
         },
