@@ -34,7 +34,8 @@ class RedditSearch extends RedditQuery
     load: (callback, after) ->
         endpoint = "http://www.reddit.com/search.json"
         data = {
-            q: @query
+            q: @query,
+            sort: "hot"
         }
         if after?
             data.after = after
