@@ -204,7 +204,6 @@ $(function() {
     var $listing;
 
     var trackView = function(path) {
-        console.log("Tracking: " + path);
         if (_gaq !== null) {
             //console.log("gaq");
             _gaq.push(['_trackPageview', location.pathname  + path]);
@@ -296,8 +295,6 @@ $(function() {
     
     if(history_enabled) {
         window.onpopstate = function(e){
-            console.log("popped: " + e.state);
-            console.dir(e);
             /*
             if(e.state && e.state.type == "subreddit") {
                 openSubreddit(e.state.sr);
@@ -311,7 +308,6 @@ $(function() {
                 openSubreddit(subreddit);
             } else if(document.location.hash.substr(1,3) == "/s/") {
                 var q = document.location.hash.substr(4);
-                alert(q);
                 openSearch(q);
             } else if(document.location.hash.substr(1,3) === "") {
                 // open homepage
