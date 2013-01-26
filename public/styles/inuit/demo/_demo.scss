@@ -162,10 +162,11 @@ a{
     .listing__item__link {
         color: #222;
 
-        &:visited {
-            color: $darker-background-color;
-        }
     }
+
+	&.visited .listing__item__link {
+		color: $darker-background-color;
+	}
 }
 
 .listing__item__thumbnail {
