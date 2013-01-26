@@ -2,3 +2,6 @@ public/scripts/main.min.js
 public/styles/your-project.min.css
 public/styles/your-project.css
 mixture.json
+public/scripts/reddit.min.js
+public/scripts/redditlisting.jquery.min.js
+reddit.js

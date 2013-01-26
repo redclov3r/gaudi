@@ -2,7 +2,7 @@
     $DEMO
 \*------------------------------------*/
 
-@import "source-sans-pro-fontfacekit/stylesheet.css";
+@import url('{{ "/styles/source-sans-pro-fontfacekit/stylesheet.css" | asset_url }}');
 
 .btn {
 	background: $accent-color;
@@ -85,22 +85,25 @@ a{
 		@include font-size(14);
 	}
 
-	.searchform {
-		float: right;
-		margin-top: $base-spacing-unit/4 +px;
-		margin-right: 30%;
+    .searchform {
+        float: right;
+        margin-top: $base-spacing-unit/4 +px;
+        margin-right: 30%;
+    }
+}
 
-		label {
-			display: inline;
-		}
-		
-		input[type=text] {
-		    border: none;
-		    border-radius: 2px;
-		    background: white;
-            padding: 0.2em;
-        }
-	}
+.searchform {
+    label {
+        display: inline;
+    }
+
+    input[type=text] {
+        border: none;
+        border-radius: 2px;
+        background: white;
+        padding: 0.22em;
+        box-shadow: inset 0px 0px 3px rgba(black, 0.2);
+    }
 }
 
 .mainheader__link {
