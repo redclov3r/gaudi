@@ -2,7 +2,7 @@
     $DEMO
 \*------------------------------------*/
 
-@import "source-sans-pro-fontfacekit/stylesheet.css";
+@import url('{{ "/styles/source-sans-pro-fontfacekit/stylesheet.css" | asset_url }}');
 
 .btn {
 	background: $accent-color;
