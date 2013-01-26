@@ -21,6 +21,11 @@
                 if(Modernizr.localstorage) {
                     if(localStorage.visited) {
                         visited = JSON.parse(localStorage.visited); 
+                        // trim
+                        
+                        if (visited.length > 400) {
+                            visited = visited.slice(100);
+                        }
                     } else {
                         localStorage.visited = [];
                     }
