@@ -13,7 +13,8 @@ There are a few items on my personal todo list, including
 * make a imgur.com parser
 * leverage localStorage API to remember visited items
 * extend search and subreddit options (e.g. top, new, controversial, user search)
-* implement comment view
+* implement a comment view
+* make a user login to add vote functionality and more
 
 For your own suggestions, you can use the _issues_ tab
 
