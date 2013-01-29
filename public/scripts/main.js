@@ -57,6 +57,8 @@ var Browser = Backbone.View.extend({
                 this.spinner.stop();
             }
         }
+
+        return this;
     },
 
     load: function(url) {
@@ -91,19 +93,28 @@ var Browser = Backbone.View.extend({
             $iframe.appendTo(this.el);
             $iframe.get(0).src = url;
         }
+
+        return this;
     },
 
     openLink: function($a) {
         this.load($a.attr('href'));
+
+        return this;
     },
 
     show: function() {
-        if (this.$el.children().length > 0)
+        if (this.$el.children().length > 0) {
             this.$el.addClass('active');
+        }
+
+        return this;
     },
 
     hide: function() {
         this.$el.removeClass('active');
+
+        return this;
     }
 });
 
