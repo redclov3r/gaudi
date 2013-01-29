@@ -42,142 +42,62 @@ var spinnerOpts = {
     color: "#8D8674"
 };
 
-/*
-function openSubreddit(subreddit, after, append, callback, add_history) {
-    if (append === undefined) {
-        append = false;
-    };
-    
-    setLoading(true);
 
-    var redditQuery = new RedditSubreddit(subreddit);
-
-    redditQuery.load(function(listingJSON){
-        renderListing(listingJSON.data);
-
-        if (callback !== undefined && callback !== null) {
-            callback();
-        }
-    }, after);
-
-    var path = "/r/" + subreddit;
-    trackView(path);
-
-    if(add_history === undefined) add_history = true;
-    if(history_enabled && add_history) {
-        window.history.pushState({type: "subreddit", sr: subreddit}, "/r/" + subreddit, "#/r/" + subreddit);
-    } 
-}
-
-function searchReddit(query, after, append, callback, add_history) {
-    if (append === undefined) {
-        append = false;
-    };
-    
-    setLoading(true);
-
-    var redditQuery = new RedditSearch(query);
-
-    redditQuery.load(function(listingJSON){
-        renderListing(listingJSON.data);
-
-        if (callback !== undefined && callback !== null) {
-            callback();
-        }
-    }, after);
-
-    var path = "/s/" + query;
-    trackView(path);
-
-    if(add_history === undefined) add_history = true;
-    if(history_enabled && add_history) {
-        window.history.pushState({type: "search", q: query}, "/s/" + query, "#/s/" + query);
-    } 
-}
-*/
-
-function openLink($a) {
-    browser.load($a.attr('href'));
-}
-
-function loadMore($ul, callback) {
-    var subreddit = $ul.data("subreddit");
-    var lastItem = $ul.children('li').last().data("name");
-    openSubreddit(subreddit, lastItem, true, callback, false);
-}
-
-
-var Browser = function(elementSelector) {
-    this.elementSelector = elementSelector;
-    this.$el = $(elementSelector);
-    this.timeout = 7000;
-    this.timeoutId = null;
-    this.spinner = null;
-};
-
-Browser.prototype.setLoading = function(isLoading) {
-    if(isLoading) {
-        this.spinner = new Spinner(spinnerOpts).spin(this.$el.get(0));
-    } else {
-        if(this.spinner !== undefined && this.spinner.stop !== undefined)
-            this.spinner.stop();
-    }
-};
-
-Browser.prototype.load = function(url) {
-    var me = this;
-
-    me.setLoading(true);
-
-    clearTimeout(me.timeoutId);
-    me.$el.empty().addClass('active');
-
-    // test for an image
-    // TODO: redo extension checking in a clean way
-    var imageExtensions = {
-        ".jpg":1,
-        "jpeg":1,
-        ".png":1
-    }
-
-    if (url.substr(-4) in imageExtensions) {
-        var $image = $('<img />');
-        $image.attr('src',url);
-        $image.appendTo(me.$el);
-
-        $image.on('load', function() {
-            me.setLoading(false);
-        });
-    } else {
-        var $iframe = $('<iframe></iframe>');
-
-        // Error handling
-        /*
-        $iframe.data('loaded', false);
-        $iframe.on('load', function() {
-            $iframe.data('loaded', true);
-        });
-        me.timeoutId = setTimeout(function() {
-            if(!$iframe.data('loaded')) {
-                $iframe.remove();
-                var errorTemplate = Handlebars.compile($('#error-template').html());
-
-                me.$el.append(errorTemplate({"url": url}));
+var Browser = Backbone.View.extend({
+    setLoading: function(state) {
+        if(state) {
+            this.spinner = new Spinner(spinnerOpts).spin(this.el);
+        } else {
+            if(this.spinner !== undefined && this.spinner.stop !== undefined) {
+                this.spinner.stop();
             }
-        }, me.timeout);
-        */
-        $iframe.on('load', function() {
-            me.setLoading(false);
-        });
-        
-        $iframe.appendTo(me.$el);
-        $iframe.get(0).src = url;
-    }
-};
+        }
+    },
 
-var browser = new Browser('#browser');
+    load: function(url) {
+        var me = this;
+        this.setLoading(true);
+
+        this.$el.empty().addClass('active');
+        
+        // test for an image
+        // TODO: redo extension checking in a clean way
+        var imageExtensions = {
+            ".jpg":1,
+            "jpeg":1,
+            ".png":1
+        };
+
+        if (url.substr(-4) in imageExtensions) {
+            var $image = $('<img />');
+            $image.attr('src',url);
+            $image.appendTo(this.el);
+
+            $image.on('load', function() {
+                me.setLoading(false);
+            });
+        } else {
+            var $iframe = $('<iframe></iframe>');
+
+            $iframe.on('load', function() {
+                me.setLoading(false);
+            });
+
+            $iframe.appendTo(this.el);
+            $iframe.get(0).src = url;
+        }
+    },
+
+    openLink: function($a) {
+        this.load($a.attr('href'));
+    }
+});
+
+
 
 $(function() {
+    browser = new Browser({el: $('#browser')});
+
     var defaultRedditSettings = {
         afterLoad: function(type, value) {
             var path;
@@ -198,7 +118,7 @@ $(function() {
             } 
         },
         onItemActivate: function($li) {
-            openLink($li.find('a.listing__item__link'));
+            browser.openLink($li.find('a.listing__item__link'));
         }
     }
     var $listing;
@@ -228,6 +148,13 @@ $(function() {
         $('#browser').removeClass('active');
     }
 
+    var loadMore = function ($ul, callback) {
+        var subreddit = $ul.data("subreddit");
+        var lastItem = $ul.children('li').last().data("name");
+        openSubreddit(subreddit, lastItem, true, callback, false);
+    }
+
+
     $(document).on('click', '#search-btn', function(e) {
         e.preventDefault();
         var q = $('#search').val();
@@ -256,13 +183,13 @@ $(function() {
     });
 
     $(document).on('click', 'a.internal', function(e){
-        openLink($(this));
         e.preventDefault();
+        browser.openLink($(this));
     });
 
     $(document).on('click', '.listing__item__link', function(e){
-        $listing.redditListing('activateItem', $(this).closest('li'));
         e.preventDefault();
+        $listing.redditListing('activateItem', $(this).closest('li'));
     });
 
     $(document).on('keydown', function(e){
