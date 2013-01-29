@@ -32,7 +32,6 @@ Handlebars.registerHelper("date", function(secondsUTC) {
 var history_enabled = true;
 history_enabled = !!(window.history && history.pushState) && history_enabled;
 
-
 var spinnerOpts = {
     lines: 17,
     length: 4,
@@ -42,6 +41,38 @@ var spinnerOpts = {
     color: "#8D8674"
 };
 
+// ---------------------------------------------------- //
+// Models 
+// ---------------------------------------------------- //
+
+var RedditPost = Backbone.Model.extend({});
+
+var RedditListing = Backbone.Collection.extend({
+    model: RedditPost,
+    initialize: function(options) {
+        this.options = options;
+    },
+    parse: function(response) {
+        return response.data.children;
+    }
+});
+
+var SubredditListing = RedditListing.extend({
+    url: function() {
+        return "http://reddit.com/r/" + this.options.subreddit + "/hot.json?jsonp=?";
+    }
+});
+
+var SearchListing = RedditListing.extend({
+    url: function() {
+        return "http://reddit.com/search.json?q=" + this.options.query + "&sort=" + "hot" + "&jsonp=?";
+    }
+});
+
+
+// ---------------------------------------------------- //
+// Views 
+// ---------------------------------------------------- //
 
 var Browser = Backbone.View.extend({
     events: {
@@ -191,6 +222,8 @@ var redditListingView = Backbone.View.extend({
                 me.options.afterLoad(me.options.type, me.options.value);
             }
 
+            this.trigger('load', me.options.type, me.options.value);
+
             // mark all items present in visited-storage
             me.$('li').each(function() {
                 if (me.visited.indexOf($(this).data('name')) != -1) {
@@ -214,6 +247,8 @@ var redditListingView = Backbone.View.extend({
             if (me.options.afterLoad) {
                 me.options.afterLoad(me.options.type, me.options.value);
             }
+
+            this.trigger('load', me.options.type, me.options.value);
 
             // mark all items present in visited-storage
             me.$('li').each(function() {
@@ -323,7 +358,6 @@ $(function() {
             browser.openLink($li.find('a.listing__item__link'));
         }
     }
-    var listing;
 
     var trackView = function(path) {
         if (_gaq !== null) {
@@ -334,17 +368,19 @@ $(function() {
         }
     }
 
-    var openSubreddit = function(sr) {
-        var $ul = $('<ul class="listing">').appendTo($('#results').empty());
-        listing = new redditListingView($.extend({ el: $ul, type:"sr", value:sr }, defaultRedditSettings));
-        console.log(listing);
+    var listing;
 
-        $('#browser').removeClass('active');
+    var openSubreddit = function(sr) {
+        createListing({ type:"sr", value:sr });
     }
 
     var openSearch = function(q) {
+        createListing({ type:"search", value:q });
+    }
+
+    var createListing = function(options) {
         var $ul = $('<ul class="listing">').appendTo($('#results').empty());
-        listing = new redditListingView($.extend({ el: $ul, type:"search", value:q }, defaultRedditSettings));
+        listing = new redditListingView($.extend(options, { el: $ul }, defaultRedditSettings));
 
         $('#browser').removeClass('active');
     }
@@ -398,6 +434,7 @@ $(function() {
         }
     });
 
+    // save index page
     var indexContent = $('#results').html();
     
     if(history_enabled) {
