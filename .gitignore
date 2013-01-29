@@ -6,3 +6,5 @@ public/scripts/reddit.min.js
 public/scripts/redditlisting.jquery.min.js
 reddit.js
 modernizr-2.6.2.min.js
+public/scripts/libs/backbone.min.js
+public/scripts/libs/underscore.min.js
