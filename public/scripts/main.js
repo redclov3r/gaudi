@@ -207,7 +207,7 @@ var redditListingView = Backbone.View.extend({
 
         var lastItem = this.$('li').last().data('name');
 
-        data.redditQuery.load(function(listingJSON) {
+        this.redditQuery.load(function(listingJSON) {
             me.renderJSON(listingJSON.data);
             me.next();
 
@@ -323,7 +323,6 @@ $(function() {
             browser.openLink($li.find('a.listing__item__link'));
         }
     }
-    var $listing;
     var listing;
 
     var trackView = function(path) {
@@ -336,12 +335,6 @@ $(function() {
     }
 
     var openSubreddit = function(sr) {
-        /*
-        $listing = $('<ul class="listing">')
-            .redditListing($.extend({type:"sr", value:sr}, defaultRedditSettings))
-            .appendTo($('#results').empty());
-            */
-
         var $ul = $('<ul class="listing">').appendTo($('#results').empty());
         listing = new redditListingView($.extend({ el: $ul, type:"sr", value:sr }, defaultRedditSettings));
         console.log(listing);
@@ -350,23 +343,11 @@ $(function() {
     }
 
     var openSearch = function(q) {
-        /*
-        $listing = $('<ul class="listing">')
-            .redditListing($.extend({type:"search", value:q}, defaultRedditSettings))
-            .appendTo($('#results').empty());
-            */
         var $ul = $('<ul class="listing">').appendTo($('#results').empty());
         listing = new redditListingView($.extend({ el: $ul, type:"search", value:q }, defaultRedditSettings));
 
         $('#browser').removeClass('active');
     }
-
-    var loadMore = function ($ul, callback) {
-        var subreddit = $ul.data("subreddit");
-        var lastItem = $ul.children('li').last().data("name");
-        openSubreddit(subreddit, lastItem, true, callback, false);
-    }
-
 
     $(document).on('click', '#search-btn', function(e) {
         e.preventDefault();
@@ -421,14 +402,6 @@ $(function() {
     
     if(history_enabled) {
         window.onpopstate = function(e){
-            /*
-            if(e.state && e.state.type == "subreddit") {
-                openSubreddit(e.state.sr);
-            } 
-            if(e.state && e.state.type == "search") {
-                openSearch(e.state.q);
-            } 
-            */
             if(document.location.hash.substr(1,3) == "/r/") {
                 var subreddit = document.location.hash.substr(4);
                 openSubreddit(subreddit);
@@ -440,15 +413,6 @@ $(function() {
                 $('#results').html(indexContent);
             }
         };
-
-        /*
-        if (document.location.hash !== "") {
-            if (document.location.hash.substr(1,3) == "/r/") {
-                var subreddit = document.location.hash.substr(4);
-                openSubreddit(subreddit);
-            }
-        }
-        */
     }
 });
 
