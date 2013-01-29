@@ -29,9 +29,6 @@ Handlebars.registerHelper("date", function(secondsUTC) {
     return Math.round(differenceMinutes)  + " minutes ago";
 });
 
-var history_enabled = true;
-history_enabled = !!(window.history && history.pushState) && history_enabled;
-
 var spinnerOpts = {
     lines: 17,
     length: 4,
@@ -47,6 +44,7 @@ var spinnerOpts = {
 
 var RedditPost = Backbone.Model.extend({});
 
+/* TODO: maybe replace Collection with Paginator */
 var RedditListing = Backbone.Collection.extend({
     model: RedditPost,
     initialize: function(options) {
@@ -151,6 +149,11 @@ var Browser = Backbone.View.extend({
 
 
 var redditListingView = Backbone.View.extend({
+    tagName: "ul",
+    className: "listing",
+
+    template: Handlebars.compile($('#listing-item-template').html()),
+
     events: {
         "click .listing__item__link": function(e) {
             e.preventDefault();
@@ -179,20 +182,27 @@ var redditListingView = Backbone.View.extend({
             }
         }
 
-        // create Query object
-        switch(this.options.type) {
-            case 'search':
-                this.redditQuery = new RedditSearch(this.options.value);
-                break;
-            case 'sr':
-                this.redditQuery = new RedditSubreddit(this.options.value);
-                break;
-        }
+        this.collection.on('request', function() { this.setLoading(true); }, this);
+        this.collection.on('sync', this.render, this);
+        // this.collection.on('all', function(event){ console.log("collection: " + event); }, this);
+    },
 
-        // compile Template
-        this.listingTemplate = Handlebars.compile($('#listing-template').html());
+    render: function() {
+        var me = this;
 
-        this.load();
+        this.setLoading(false);
+
+        this.collection.each(function(item) {
+            this.$el.append(this.template(item.attributes.data));
+        }, this);
+
+        this.$('li').each(function() {
+            if (me.visited.indexOf($(this).data('name')) != -1) {
+                $(this).addClass('visited');
+            }
+        });
+
+        return this;
     },
 
 
@@ -209,58 +219,6 @@ var redditListingView = Backbone.View.extend({
         }
     },
 
-
-    load: function() {
-        var me = this;
-
-        this.setLoading(true);
-
-        this.redditQuery.load(function(listingJSON) {
-            me.renderJSON(listingJSON.data);
-
-            if (me.options.afterLoad) {
-                me.options.afterLoad(me.options.type, me.options.value);
-            }
-
-            this.trigger('load', me.options.type, me.options.value);
-
-            // mark all items present in visited-storage
-            me.$('li').each(function() {
-                if (me.visited.indexOf($(this).data('name')) != -1) {
-                    $(this).addClass('visited');
-                }
-            });
-        });
-    },
-
-
-    loadMore: function() {
-        var me = this;
-        this.setLoading(true);
-
-        var lastItem = this.$('li').last().data('name');
-
-        this.redditQuery.load(function(listingJSON) {
-            me.renderJSON(listingJSON.data);
-            me.next();
-
-            if (me.options.afterLoad) {
-                me.options.afterLoad(me.options.type, me.options.value);
-            }
-
-            this.trigger('load', me.options.type, me.options.value);
-
-            // mark all items present in visited-storage
-            me.$('li').each(function() {
-                if (me.visited.indexOf($(this).data('name')) != -1) {
-                    $(this).addClass('visited');
-                }
-            });
-
-        }, lastItem);
-    },
-
-
     activateItem: function($li) {
         var me = this;
 
@@ -270,9 +228,7 @@ var redditListingView = Backbone.View.extend({
         // scroll to active
         $('html, body').stop(true).animate({scrollTop : ($li.offset().top - 47 - 36)}, 'slow');
 
-        if (me.options.onItemActivate) {
-            me.options.onItemActivate($li);
-        }
+        me.trigger('activate', $li.find('.listing__item__link'));
 
         this.markVisited($li.data('name'));
     },
@@ -332,75 +288,69 @@ var redditListingView = Backbone.View.extend({
 });
 
 
-$(function() {
-    browser = new Browser({el: $('#browser')});
+var AppRouter = Backbone.Router.extend({
+    routes: {
+        "": "index",
+        "r/:subreddit": "subreddit",
+        "s/:q": "search"
+    },
+    
+    initialize: function() {
+        this.on('route', this.trackView);
+    },
 
-    var defaultRedditSettings = {
-        afterLoad: function(type, value) {
-            var path;
-            var state = {};
-            switch(type) {
-                case 'sr':
-                    path = "/r/" + value;
-                    state = {type: "subreddit", sr: value};
-                    break;
-                case 'search':
-                    path = "/s/" + value;
-                    state = {type: "search", q: value};
-                    break;
-            }
-            trackView(path);
-            if(history_enabled) {
-                window.history.pushState(state, path, "#" + path);
-            } 
-        },
-        onItemActivate: function($li) {
-            browser.openLink($li.find('a.listing__item__link'));
-        }
-    }
+    index: function() {
+        $('#results').html(this.indexContent);
+    },
 
-    var trackView = function(path) {
+    subreddit: function(subreddit) {
+        var query = new SubredditListing({ subreddit: subreddit });
+        this.createListing(query);
+    },
+
+    search: function(q) {
+        var query = new SearchListing({ query: q });
+        this.createListing(query);
+    },
+
+    createListing: function(query, options) {
+        browser.hide();
+
+        this.listing = new redditListingView($.extend(options, { collection: query }));
+        this.listing.on('activate', browser.openLink, browser);
+        query.fetch();
+        $('#results').html(this.listing.el);
+    },
+
+    trackView: function() {
         if (_gaq !== null) {
-            //console.log("gaq");
-            _gaq.push(['_trackPageview', location.pathname  + path]);
+            console.log("gaq", Backbone.history.getFragment());
+            _gaq.push(['_trackPageview', Backbone.history.getFragment()]);
         } else {
             console.log("no gaq found");
         }
     }
+});
 
-    var listing;
 
-    var openSubreddit = function(sr) {
-        createListing({ type:"sr", value:sr });
-    }
+$(function() {
+    app = new AppRouter();
+    browser = new Browser({el: $('#browser')});
 
-    var openSearch = function(q) {
-        createListing({ type:"search", value:q });
-    }
+    // save index page
+    app.indexContent = $('#results').html();
 
-    var createListing = function(options) {
-        var $ul = $('<ul class="listing">').appendTo($('#results').empty());
-        listing = new redditListingView($.extend(options, { el: $ul }, defaultRedditSettings));
-
-        $('#browser').removeClass('active');
-    }
-
+    Backbone.history.start();
+    
+    // setup all events
     $(document).on('click', '#search-btn', function(e) {
         e.preventDefault();
-        var q = $('#search').val();
-        if (q === "") {
-            q = "funny gifs";
-        }
-        openSearch(q);
+        app.navigate('s/' + $('#search').val(), {trigger: true});
     });
 
     $("#open-btn").on('click', function(e) {
         e.preventDefault();
-        var sr = $('#subreddit').val();
-        if (sr === "") {
-            sr = "pics";
-        }
-        openSubreddit(sr);
+        app.navigate('r/' + $('#subreddit').val(), {trigger: true});
     });
 
     $(document).on('click', 'a.internal', function(e){
@@ -411,12 +361,12 @@ $(function() {
     $(document).on('keydown', function(e){
         switch(e.which) {
             case 40:
-                listing.next();
+                app.listing.next();
                 e.preventDefault();
                 break;
             
             case 38:
-                listing.prev();
+                app.listing.prev();
                 e.preventDefault();
                 break;
 
@@ -433,23 +383,5 @@ $(function() {
             default:
         }
     });
-
-    // save index page
-    var indexContent = $('#results').html();
-    
-    if(history_enabled) {
-        window.onpopstate = function(e){
-            if(document.location.hash.substr(1,3) == "/r/") {
-                var subreddit = document.location.hash.substr(4);
-                openSubreddit(subreddit);
-            } else if(document.location.hash.substr(1,3) == "/s/") {
-                var q = document.location.hash.substr(4);
-                openSearch(q);
-            } else if(document.location.hash.substr(1,3) === "") {
-                // open homepage
-                $('#results').html(indexContent);
-            }
-        };
-    }
 });
 
