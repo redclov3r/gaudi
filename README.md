@@ -16,6 +16,7 @@ There are a few items on my personal todo list, including
 * extend search and subreddit options (e.g. top, new, controversial, ~~user search~~)
 * implement a comment view
 * make a user login to add vote functionality and more
+* add title of post to browser window so you don't have to switch back to list view
 
 For your own suggestions, you can use the _issues_ tab
 
