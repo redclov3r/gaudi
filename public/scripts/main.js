@@ -90,6 +90,15 @@ var SearchListing = RedditListing.extend({
     }
 });
 
+var UserListing = RedditListing.extend({
+    url: function() {
+        return "http://reddit.com/user/" + this.options.username + "/submitted.json?jsonp=?";
+    },
+    getTitle: function() {
+        return "User: " + this.options.username;
+    }
+});
+
 
 // ---------------------------------------------------- //
 // Views 
@@ -324,7 +333,8 @@ var AppRouter = Backbone.Router.extend({
     routes: {
         "": "index",
         "r/:subreddit": "subreddit",
-        "s/:q": "search"
+        "s/:q": "search",
+        "u/:username": "user"
     },
     
     initialize: function() {
@@ -342,6 +352,11 @@ var AppRouter = Backbone.Router.extend({
 
     search: function(q) {
         var query = new SearchListing({ query: q });
+        this.createListing(query);
+    },
+
+    user: function(username) {
+        var query = new UserListing({ username: username });
         this.createListing(query);
     },
 
@@ -374,15 +389,12 @@ $(function() {
 
     Backbone.history.start();
     
-    // setup all events
-    $(document).on('click', '#search-btn', function(e) {
-        e.preventDefault();
-        app.navigate('s/' + $('#search').val(), {trigger: true});
-    });
-
     $("#open-btn").on('click', function(e) {
         e.preventDefault();
-        app.navigate('r/' + $('#subreddit').val(), {trigger: true});
+
+        var type = $('#listing-type').val();
+        var value = $('#listing-value').val();
+        app.navigate(type + value, {trigger: true});
     });
 
     $(document).on('click', 'a.internal', function(e){
