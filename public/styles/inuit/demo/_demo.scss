@@ -158,15 +158,18 @@ a{
 
     background: $darker-background-color;
     border-radius: 4px;
+
+	border-left: solid 4px $brand-color;
+	color: #444;
 }
 
 .listing__item {
 	//margin: 0;
-	padding-left: $base-spacing-unit / 2;
-	padding-left: ($base-spacing-unit / (2 * $base-font-size))*1rem;
 
 	&.active {
 		border-left: solid 4px $brand-color;
+		padding-left: $base-spacing-unit / 2 +px;
+		padding-left: ($base-spacing-unit / (2 * $base-font-size))*1rem;
 	}
 	a {
 	    color: $brand-color;
