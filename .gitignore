@@ -1,10 +1,9 @@
-public/scripts/main.min.js
-public/styles/your-project.min.css
-public/styles/your-project.css
 mixture.json
-public/scripts/reddit.min.js
-public/scripts/redditlisting.jquery.min.js
-reddit.js
+
+public/scripts/main.min.js
 modernizr-2.6.2.min.js
 public/scripts/libs/backbone.min.js
 public/scripts/libs/underscore.min.js
+
+public/styles/gaudi.css
+public/styles/gaudi.min.css
