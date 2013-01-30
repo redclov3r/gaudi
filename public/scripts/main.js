@@ -61,20 +61,45 @@ var RedditPost = Backbone.Model.extend({});
 /* TODO: maybe replace Collection with Paginator */
 var RedditListing = Backbone.Collection.extend({
     model: RedditPost,
+    options: { 
+        step: 25,
+        max: 100
+    },
+    params: {
+        limit: 0
+    },
     initialize: function(options) {
-        this.options = options;
+        this.options = _.extend(this.options, options);
+
+        this.params.limit = this.options.step;
+    },
+    more: function() {
+        this.params.limit += this.options.step;
+        if (this.params.limit > this.options.max) {
+            this.params.limit = this.options.step;
+            this.params.after = this.last_item;
+        }
+
+        this.fetch({update: true});
     },
     parse: function(response) {
+        // set the last element for the next call
+        this.last_item = response.data.after;
         return response.data.children;
     },
     getTitle: function() {
         return "Reddit Listing";
+    },
+    getQueryString: function(params) {
+        var parameters = _.extend(this.params, params);
+        return $.param(parameters) + "&jsonp=?";
     }
 });
 
 var SubredditListing = RedditListing.extend({
     url: function() {
-        return "http://reddit.com/r/" + this.options.subreddit + "/hot.json?jsonp=?";
+        var qstring = this.getQueryString();
+        return "http://reddit.com/r/" + this.options.subreddit + "/hot.json?" + qstring;
     },
     getTitle: function() {
         return "/r/" + this.options.subreddit;
@@ -83,7 +108,11 @@ var SubredditListing = RedditListing.extend({
 
 var SearchListing = RedditListing.extend({
     url: function() {
-        return "http://reddit.com/search.json?q=" + this.options.query + "&sort=" + "hot" + "&jsonp=?";
+        var qstring = this.getQueryString({
+            q: this.options.query,
+            sort: "hot"
+        });
+        return "http://reddit.com/search.json?" + qstring;
     },
     getTitle: function() {
         return "Searching: " + this.options.query;
@@ -92,7 +121,8 @@ var SearchListing = RedditListing.extend({
 
 var UserListing = RedditListing.extend({
     url: function() {
-        return "http://reddit.com/user/" + this.options.username + "/submitted.json?jsonp=?";
+        var qstring = this.getQueryString();
+        return "http://reddit.com/user/" + this.options.username + "/submitted.json?" + qstring;
     },
     getTitle: function() {
         return "User: " + this.options.username;
@@ -191,6 +221,10 @@ var RedditListingView = Backbone.View.extend({
         "click .listing__item__link": function(e) {
             e.preventDefault();
             this.activateItem($(e.target).closest('li'));
+        },
+        "click .listing__more": function(e) {
+            e.preventDefault();
+            this.loadMore();
         }
     },
 
@@ -258,6 +292,8 @@ var RedditListingView = Backbone.View.extend({
 
     activateItem: function($li) {
         var me = this;
+        
+        if ($li.length === 0) { return; }
 
         $li.siblings().removeClass('active');
         $li.addClass('active');
@@ -269,14 +305,6 @@ var RedditListingView = Backbone.View.extend({
 
         this.markVisited($li.data('name'));
     },
-
-    renderJSON: function(json) {
-        this.setLoading(false);
-
-        var listingHTML = this.listingTemplate(json);
-        this.$el.append(listingHTML);
-    },
-
 
     setLoading: function(state) {
         if(this.spinner !== undefined && this.spinner.stop !== undefined) {
@@ -290,6 +318,15 @@ var RedditListingView = Backbone.View.extend({
         }
     },
 
+    loadMore: function(next) {
+        var currentActive = this.$('li.active').data('name');
+        this.collection.once('sync', function(){
+            var $lastActive = this.$("li[data-name=" + currentActive + "]");
+            this.activateItem($lastActive);
+            if(next) { this.next(); }
+        }, this);
+        this.collection.more();
+    },
 
     next: function() {
         var $activeli = this.$('li.active');
@@ -303,7 +340,7 @@ var RedditListingView = Backbone.View.extend({
         if ($nextli.length > 0) {
             this.activateItem($nextli);
         } else {
-            this.loadMore();
+            this.loadMore(true);
         }
     },
 
@@ -372,7 +409,6 @@ var AppRouter = Backbone.Router.extend({
 
     trackView: function() {
         if (_gaq !== null) {
-            console.log("gaq", Backbone.history.getFragment());
             _gaq.push(['_trackPageview', Backbone.history.getFragment()]);
         } else {
             console.log("no gaq found");

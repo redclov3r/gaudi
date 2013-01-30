@@ -6,7 +6,7 @@
 
 .btn {
 	background: $accent-color;
-    color: white;
+    color: white!important;
 	border-radius: 2px;
 	&:hover {
         box-shadow: 1px 1px 8px rgba(black, 0.3);
