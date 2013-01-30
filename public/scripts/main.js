@@ -1,3 +1,13 @@
+// ==================================================== //
+// gaudi main JavaScript
+//
+// based on Backbone.js and jQuery
+// ==================================================== //
+
+// ---------------------------------------------------- //
+// Templating helpers 
+// ---------------------------------------------------- //
+
 Handlebars.registerHelper("debug", function(optionalValue) { 
     console.log("Current Context"); 
     console.log("===================="); 
@@ -28,6 +38,10 @@ Handlebars.registerHelper("date", function(secondsUTC) {
 
     return Math.round(differenceMinutes)  + " minutes ago";
 });
+
+// ---------------------------------------------------- //
+// Defaults
+// ---------------------------------------------------- //
 
 var spinnerOpts = {
     lines: 17,
@@ -148,7 +162,7 @@ var Browser = Backbone.View.extend({
 });
 
 
-var redditListingView = Backbone.View.extend({
+var RedditListingView = Backbone.View.extend({
     tagName: "ul",
     className: "listing",
 
@@ -288,6 +302,10 @@ var redditListingView = Backbone.View.extend({
 });
 
 
+// ---------------------------------------------------- //
+// Router 
+// ---------------------------------------------------- //
+
 var AppRouter = Backbone.Router.extend({
     routes: {
         "": "index",
@@ -316,7 +334,7 @@ var AppRouter = Backbone.Router.extend({
     createListing: function(query, options) {
         browser.hide();
 
-        this.listing = new redditListingView($.extend(options, { collection: query }));
+        this.listing = new RedditListingView($.extend(options, { collection: query }));
         this.listing.on('activate', browser.openLink, browser);
         query.fetch();
         $('#results').html(this.listing.el);
