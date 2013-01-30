@@ -25,10 +25,11 @@ Credits
 *gaudi* relies heavily on other open source projects. Some of them are
 
 * first of all the [reddit API](http://reddit.com/dev/api) ([github](https://github.com/reddit/reddit))
-* [backbone.js](http://backbonejs.org), a structural JS framework that saved me since commit 5cce3da8d04dfeeb12c5e47309b745b3a40ab8f9 ([github](http://github.com/documentcloud/backbone/)) 
+* [backbone.js](http://backbonejs.org), a structural JS framework that helped a lot with structuring my loose jQuery prototypes
+* [jquery](http://jquery.com), well you propably know...
 * [inuit.css](http://inuitcss.com), a great, tiny CSS framework by [@csswizardry](http://csswizardry.com) ([github](https://github.com/csswizardry/inuit.css))
 * [Source Sans Pro](http://blogs.adobe.com/typblography/2012/08/source-sans-pro.html), an open source font by Adobe ([github](https://github.com/adobe/source-sans-pro))
 * [SubtlePatterns](http://subtlepatterns.com/wild-oliva/), a wonderful library of tileable background patterns ([github](https://github.com/subtlepatterns/SubtlePatterns))
 
-Furthermore, *gaudi* is built with [Mixture](http://mixture.io)
+Furthermore, *gaudi* is built and compiled with [Mixture](http://mixture.io)
 
