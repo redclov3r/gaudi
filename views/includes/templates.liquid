@@ -18,10 +18,15 @@
         </small>
         <br />
         <small>
-            <b>{{author}}</b> posted this
-            {{date created_utc}},
-            <b>{{score}}</b> Points,
-            <a href="http://reddit.com{{permalink}}" class="internal">{{num_comments}}</a> Comments
+        posted by
+        <a href="http://reddit.com/user/{{author}}" class="internal">{{author}}</a>(<a href="#u/{{author}}">more</a>) 
+        {{date created_utc}} 
+        {{#if hide_subreddit}}
+        {{else}}
+        in <a href="#r/{{subreddit}}">{{subreddit}}</a>,
+        {{/if}}
+        <b>{{score}}</b> Points,
+        <a href="http://reddit.com{{permalink}}" class="internal">{{num_comments}}</a> Comments
         </small>
     </p>
     </li>
