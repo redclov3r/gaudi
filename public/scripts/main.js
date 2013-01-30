@@ -342,6 +342,7 @@ var AppRouter = Backbone.Router.extend({
     },
 
     index: function() {
+        browser.hide();
         $('#results').html(this.indexContent);
     },
 
