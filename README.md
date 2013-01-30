@@ -11,6 +11,7 @@ There are a few items on my personal todo list, including
 
 * enable touch-support
 * make a imgur.com parser
+* make listings saveable
 * ~~leverage localStorage API to remember visited items~~
 * extend search and subreddit options (e.g. top, new, controversial, ~~user search~~)
 * implement a comment view
