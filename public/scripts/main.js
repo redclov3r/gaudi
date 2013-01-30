@@ -66,18 +66,27 @@ var RedditListing = Backbone.Collection.extend({
     },
     parse: function(response) {
         return response.data.children;
+    },
+    getTitle: function() {
+        return "Reddit Listing";
     }
 });
 
 var SubredditListing = RedditListing.extend({
     url: function() {
         return "http://reddit.com/r/" + this.options.subreddit + "/hot.json?jsonp=?";
+    },
+    getTitle: function() {
+        return "/r/" + this.options.subreddit;
     }
 });
 
 var SearchListing = RedditListing.extend({
     url: function() {
         return "http://reddit.com/search.json?q=" + this.options.query + "&sort=" + "hot" + "&jsonp=?";
+    },
+    getTitle: function() {
+        return "Searching: " + this.options.query;
     }
 });
 
@@ -163,10 +172,11 @@ var Browser = Backbone.View.extend({
 
 
 var RedditListingView = Backbone.View.extend({
-    tagName: "ul",
+    tagName: "div",
     className: "listing",
 
-    template: Handlebars.compile($('#listing-item-template').html()),
+    template: Handlebars.compile($('#listing-template').html()),
+    itemTemplate: Handlebars.compile($('#listing-item-template').html()),
 
     events: {
         "click .listing__item__link": function(e) {
@@ -206,8 +216,12 @@ var RedditListingView = Backbone.View.extend({
 
         this.setLoading(false);
 
+        this.$el.html(this.template({
+            title: this.collection.getTitle()
+        }));
+
         this.collection.each(function(item) {
-            this.$el.append(this.template(item.attributes.data));
+            this.$('ul').append(this.itemTemplate(item.attributes.data));
         }, this);
 
         this.$('li').each(function() {
