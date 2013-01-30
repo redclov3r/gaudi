@@ -148,6 +148,18 @@ a{
 	margin: 0;
 	width: 70%;
 }
+
+.listing__title {
+    padding: $base-spacing-unit / 2 +px;
+
+    @include font-size(18);
+    font-weight: 400;
+    width: 60%;
+
+    background: $darker-background-color;
+    border-radius: 4px;
+}
+
 .listing__item {
 	//margin: 0;
 	padding-left: $base-spacing-unit / 2;
