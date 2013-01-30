@@ -199,7 +199,7 @@ var RedditListingView = Backbone.View.extend({
 
                 // trim
                 if (this.visited.length > 400) {
-                    this.visited = visited.slice(100);
+                    this.visited = this.visited.slice(100);
                 }
             } else {
                 localStorage.visited = [];
