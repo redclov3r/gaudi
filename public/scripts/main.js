@@ -206,6 +206,12 @@ var Browser = Backbone.View.extend({
         this.$el.removeClass('active');
 
         return this;
+    },
+    
+    clear: function() {
+        console.log(this);
+        this.$el.empty();
+        this.hide();
     }
 });
 
@@ -376,6 +382,9 @@ var AppRouter = Backbone.Router.extend({
     
     initialize: function() {
         this.on('route', this.trackView);
+        this.on('route', function(){
+            this.browser.clear();
+        }, this);
     },
 
     index: function() {
@@ -419,7 +428,7 @@ var AppRouter = Backbone.Router.extend({
 
 $(function() {
     app = new AppRouter();
-    browser = new Browser({el: $('#browser')});
+    app.browser = browser = new Browser({el: $('#browser')});
 
     // save index page
     app.indexContent = $('#results').html();
