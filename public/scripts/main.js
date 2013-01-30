@@ -417,8 +417,14 @@ var AppRouter = Backbone.Router.extend({
     },
 
     trackView: function() {
+        var path = Backbone.history.getFragment();
+        if (path === "") {
+            document.title = "gaudi";
+        } else {
+            document.title = path + " | gaudi";
+        }
         if (_gaq !== null) {
-            _gaq.push(['_trackPageview', Backbone.history.getFragment()]);
+            _gaq.push(['_trackPageview', path]);
         } else {
             console.log("no gaq found");
         }
